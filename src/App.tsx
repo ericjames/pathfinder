@@ -1,25 +1,36 @@
+import './App.css';
+
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+
+const AppWrapper = styled.div`
+max-width: 1400px;
+padding: 20px;
+background: #fff;
+min-height: 80vh;
+margin: auto;
+`;
+
+const Header = styled.header`
+
+`;
+
+const Content = styled.main`
+`;
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppWrapper>
+      <Header>
+        <h1>Pathfinder</h1>
+      </Header>
+      <Content>
+
+
+      </Content>
+    </AppWrapper>
   );
 }
 
