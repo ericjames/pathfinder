@@ -1,8 +1,7 @@
-import './App.css';
-
-import React from 'react';
-import logo from './logo.svg';
+import Grid from './Grid';
+import GridType from './types';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 const AppWrapper = styled.div`
 max-width: 1400px;
@@ -21,12 +20,16 @@ const Content = styled.main`
 
 
 function App() {
+
+  const [grid, setGrid] = useState<GridType | null>(null);
+
   return (
     <AppWrapper>
       <Header>
         <h1>Pathfinder</h1>
       </Header>
       <Content>
+        <Grid grid={grid} />
 
 
       </Content>
