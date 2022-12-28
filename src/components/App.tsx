@@ -22,24 +22,33 @@ const Content = styled.main`
 function App() {
 
   // User can change grid width height
-  const [gridForm, setGridForm] = useState<GridForm>({ rows: 0, columns: 0 });
+  const [gridForm, setGridForm] = useState<GridForm>({ rows: 3, columns: 3 });
   // const [rows, setRows] = useState<number>(0);
   // const [columns, setColumns] = useState<number>(0);
 
   // Tracks number of cells and their X or O status
-  const [cells, setCells] = useState<Array<CellStatus>>([]);
+  const [cells, setCells] = useState<Array<Array<CellStatus>>>([]);
 
   useEffect(() => {
+    // @Debugging only
+    createCells();
+  }, [gridForm]);
+
+  const createCells = () => {
     if (gridForm.rows && gridForm.columns) {
-      const cellCount = gridForm.rows * gridForm.columns;
-      const newCellGrid = [] as Array<CellStatus>;
-      for (let i = 0; i < cellCount; i++) {
-        newCellGrid.push({} as CellStatus);
+      // const cellCount = gridForm.rows * gridForm.columns;
+      const newCellGrid = [];
+      // Arrange for BFS search ...[row: column cells] 
+      for (let i = 0; i < gridForm.rows; i++) {
+        newCellGrid.push([] as Array<CellStatus>);
+        const row = newCellGrid[i];
+        for (let j = 0; j < gridForm.columns; j++) {
+          row.push({ marked: 0, traversed: 0 } as CellStatus);
+        }
       }
       setCells(newCellGrid);
     }
-  }, [gridForm]);
-
+  }
 
   return (
     <AppWrapper>
@@ -49,7 +58,8 @@ function App() {
       <Content>
 
         <input value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
-        <input value={gridForm.columns} type="number" />
+        <input value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
+        <button onClick={createCells}>Set Grid</button>
 
         <Grid gridForm={gridForm} cells={cells} />
 

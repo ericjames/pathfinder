@@ -5,21 +5,26 @@ import styled from 'styled-components';
 
 type GridProps = {
     gridForm: GridForm | null;
-    cells: Array<CellStatus> | null;
+    cells: Array<Array<CellStatus>> | null;
 };
 
 const GridWrapper = styled.div`
-box-shadow: 0 0.2em 1em #ddd;
-margin: 2em;
 min-height: 40vh;
-
+.Row {
+    display: flex;
+}
 `;
 
 export default function Grid({ gridForm, cells }: GridProps) {
+    console.log(cells);
     return (
         <GridWrapper>
 
-            {cells && cells.map((cell, i) => <Cell key={i} cell={cell} />)}
+            {cells && cells.length > 0 && cells.map((row, i) => (
+                <div className="Row" key={i}>
+                    {row.map((cell, i) => (<Cell key={i} cell={cell} />))}
+                </div>
+            ))}
 
         </GridWrapper>
     )
