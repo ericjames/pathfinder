@@ -3,11 +3,12 @@ enum GridShape {
   Columns = 0
 }
 
-enum CellMarking {
-  Marked = 0,
-  Traversed = 0
+export enum CellMarking {
+  UnMarked = 0,
+  Marked = 1,
 }
 
+export type OnCellClick = (cell: CellStatus) => void;
 
 export interface GridForm {
   rows: GridShape.Rows;
@@ -17,6 +18,13 @@ export interface GridForm {
 //   cells: Array<CellStatus>;
 // }
 export interface CellStatus {
-  marked: CellMarking.Marked,
-  traversed: CellMarking.Traversed
+  x: number | null,
+  y: number | null,
+  index: number, // location in main array
+  boundaryLeft: boolean,
+  boundaryRight: boolean,
+  boundaryTop: boolean,
+  boundaryBottom: boolean,
+  marked: CellMarking,
+  traversed: 0
 }

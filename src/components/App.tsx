@@ -1,4 +1,4 @@
-import { CellStatus, GridForm } from './types';
+import { CellMarking, CellStatus, GridForm } from './types';
 import { useEffect, useState } from 'react';
 
 import Grid from './Grid';
@@ -26,8 +26,8 @@ function App() {
   // const [rows, setRows] = useState<number>(0);
   // const [columns, setColumns] = useState<number>(0);
 
-  // Tracks number of cells and their X or O status
-  const [cells, setCells] = useState<Array<Array<CellStatus>>>([]);
+  // Holy grail tracks number of cells and their X or O status
+  const [cells, setCells] = useState<Array<CellStatus>>([]);
 
   useEffect(() => {
     // @Debugging only
@@ -36,18 +36,41 @@ function App() {
 
   const createCells = () => {
     if (gridForm.rows && gridForm.columns) {
-      // const cellCount = gridForm.rows * gridForm.columns;
+      const cellCount = gridForm.rows * gridForm.columns;
+
+      // Create our main tracking array of cells
       const newCellGrid = [];
-      // Arrange for BFS search ...[row: column cells] 
-      for (let i = 0; i < gridForm.rows; i++) {
-        newCellGrid.push([] as Array<CellStatus>);
-        const row = newCellGrid[i];
-        for (let j = 0; j < gridForm.columns; j++) {
-          row.push({ marked: 0, traversed: 0 } as CellStatus);
+      for (let i = 0; i < cellCount; i++) {
+        newCellGrid.push({ index: i, marked: 0, traversed: 0 } as CellStatus);
+      }
+
+      // Give coordinates and boundaries for each cell
+      let counter = 0;
+      for (let y = 0; y < gridForm.rows; y++) {
+        for (let x = 0; x < gridForm.columns; x++) {
+          newCellGrid[counter].y = y;
+          newCellGrid[counter].x = x;
+          newCellGrid[counter].boundaryLeft = (x === 0);
+          newCellGrid[counter].boundaryRight = (x === gridForm.columns - 1);
+          newCellGrid[counter].boundaryTop = (y === 0);
+          newCellGrid[counter].boundaryBottom = (y === gridForm.rows - 1);
+          counter = counter + 1;
         }
       }
+
       setCells(newCellGrid);
     }
+  }
+
+  const onCellClick = (cell: CellStatus) => {
+    setCellMarked(cell);
+
+  }
+
+  const setCellMarked = (cell: CellStatus) => {
+    let newCells = cells;
+    newCells[cell.index].marked = CellMarking.Marked;
+    setCells(newCells);
   }
 
   return (
@@ -61,7 +84,7 @@ function App() {
         <input value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
         <button onClick={createCells}>Set Grid</button>
 
-        <Grid gridForm={gridForm} cells={cells} />
+        <Grid gridForm={gridForm} cells={cells} onCellClick={onCellClick} />
 
 
         <br /><br /><br /><br />
@@ -70,7 +93,7 @@ function App() {
 
 
       </Content>
-    </AppWrapper >
+    </AppWrapper>
   );
 }
 

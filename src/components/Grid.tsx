@@ -1,30 +1,31 @@
-import { CellStatus, GridForm } from './types';
+import { CellStatus, GridForm, OnCellClick } from './types';
 
 import Cell from './Cell';
 import styled from 'styled-components';
 
 type GridProps = {
-    gridForm: GridForm | null;
-    cells: Array<Array<CellStatus>> | null;
+    gridForm: GridForm;
+    cells: Array<CellStatus> | [];
+    onCellClick: OnCellClick;
 };
 
 const GridWrapper = styled.div`
 min-height: 40vh;
-.Row {
     display: flex;
-}
+    flex-wrap: wrap;
 `;
 
-export default function Grid({ gridForm, cells }: GridProps) {
-    console.log(cells);
+export default function Grid({ gridForm, cells, onCellClick }: GridProps) {
+    // console.log(cells);
+
+    const renderCells = () => {
+
+        return cells.map((cell, i) => (<Cell key={i} cell={cell} gridForm={gridForm} onCellClick={onCellClick} />));
+    }
     return (
         <GridWrapper>
 
-            {cells && cells.length > 0 && cells.map((row, i) => (
-                <div className="Row" key={i}>
-                    {row.map((cell, i) => (<Cell key={i} cell={cell} />))}
-                </div>
-            ))}
+            {cells && cells.length > 0 && renderCells()}
 
         </GridWrapper>
     )
