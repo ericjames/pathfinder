@@ -1,4 +1,4 @@
-import { CellStatus, GridForm, OnCellClick } from './types';
+import { CellStatus, CellType, GridForm, OnCellClick } from './types';
 
 import styled from 'styled-components';
 
@@ -20,13 +20,30 @@ export default function Cell({ cell, gridForm, onCellClick }: CellProps) {
     // console.log("CELL", cell);
 
     // Visual rows via CSS
-    const style = { flexBasis: (100 / gridForm.rows) + '%' };
+    let backgroundColor = '';
+    switch (cell.type) {
+        case CellType.Start:
+            backgroundColor = 'green';
+            break;
+        case CellType.End:
+            backgroundColor = '#aa0000';
+            break;
+        case CellType.Blocked:
+            backgroundColor = '#eee';
+            break;
+        default:
+    }
+
+    const style = {
+        flexBasis: (100 / gridForm.rows) + '%',
+        backgroundColor,
+    };
 
     return (
         <CellWrapper onClick={() => onCellClick(cell)} style={style}>
             col x: {cell && cell.x}<br />
             row y: {cell && cell.y}<br />
-            marked: {cell && cell.blocked && 'Blocked'}<br />
+            type: {cell && CellType[cell.type]}<br />
             {/* traversed: {cell && cell.traversed} */}
 
         </CellWrapper>

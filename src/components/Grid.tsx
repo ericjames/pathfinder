@@ -10,7 +10,8 @@ type GridProps = {
 };
 
 const GridWrapper = styled.div`
-min-height: 40vh;
+margin-top: 2em;
+    min-height: 40vh;
     display: flex;
     flex-wrap: wrap;
 `;
