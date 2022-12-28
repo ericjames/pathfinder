@@ -1,4 +1,4 @@
-import { CellMarking, CellStatus, GridForm } from './types';
+import { CellStatus, GridForm } from './types';
 import { useEffect, useState } from 'react';
 
 import Grid from './Grid';
@@ -41,10 +41,11 @@ function App() {
       // Create our main tracking array of cells
       const newCellGrid = [];
       for (let i = 0; i < cellCount; i++) {
-        newCellGrid.push({ index: i, marked: 0, traversed: 0 } as CellStatus);
+        newCellGrid.push({ index: i, blocked: false, traversed: false } as CellStatus);
       }
 
       // Give coordinates and boundaries for each cell
+      // Avoiding needing to do these loops later, use CSS to do the visual trickery
       let counter = 0;
       for (let y = 0; y < gridForm.rows; y++) {
         for (let x = 0; x < gridForm.columns; x++) {
@@ -68,9 +69,9 @@ function App() {
   }
 
   const setCellMarked = (cell: CellStatus) => {
-    let newCells = cells;
-    newCells[cell.index].marked = CellMarking.Marked;
-    setCells(newCells);
+    let newCellGrid = cells;
+    newCellGrid[cell.index].blocked = !newCellGrid[cell.index].blocked;
+    setCells([...newCellGrid]);
   }
 
   return (

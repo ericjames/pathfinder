@@ -17,15 +17,16 @@ box-sizing: border-box;
 `;
 
 export default function Cell({ cell, gridForm, onCellClick }: CellProps) {
-    console.log("CELL", cell);
+    // console.log("CELL", cell);
 
+    // Visual rows via CSS
     const style = { flexBasis: (100 / gridForm.rows) + '%' };
 
     return (
         <CellWrapper onClick={() => onCellClick(cell)} style={style}>
             col x: {cell && cell.x}<br />
             row y: {cell && cell.y}<br />
-            marked: {cell && cell.marked === 1 && 'X'}<br />
+            marked: {cell && cell.blocked && 'Blocked'}<br />
             {/* traversed: {cell && cell.traversed} */}
 
         </CellWrapper>

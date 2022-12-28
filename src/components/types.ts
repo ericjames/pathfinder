@@ -3,11 +3,6 @@ enum GridShape {
   Columns = 0
 }
 
-export enum CellMarking {
-  UnMarked = 0,
-  Marked = 1,
-}
-
 export type OnCellClick = (cell: CellStatus) => void;
 
 export interface GridForm {
@@ -25,6 +20,6 @@ export interface CellStatus {
   boundaryRight: boolean,
   boundaryTop: boolean,
   boundaryBottom: boolean,
-  marked: CellMarking,
-  traversed: 0
+  blocked: boolean,
+  traversed: boolean
 }

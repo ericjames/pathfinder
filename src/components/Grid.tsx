@@ -19,7 +19,7 @@ export default function Grid({ gridForm, cells, onCellClick }: GridProps) {
     // console.log(cells);
 
     const renderCells = () => {
-
+        console.log("RENDER");
         return cells.map((cell, i) => (<Cell key={i} cell={cell} gridForm={gridForm} onCellClick={onCellClick} />));
     }
     return (
