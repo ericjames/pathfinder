@@ -41,6 +41,8 @@ export default function Cell({ cell, gridForm, onCellClick }: CellProps) {
 
     return (
         <CellWrapper onClick={() => onCellClick(cell)} style={style}>
+
+            INDEX: {cell && cell.index}<br />
             col x: {cell && cell.x}<br />
             row y: {cell && cell.y}<br />
             type: {cell && CellType[cell.type]}<br />
