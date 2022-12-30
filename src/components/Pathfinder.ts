@@ -50,7 +50,7 @@ function findPaths(cellGrid: CellGrid) {
 
     while (q.length !== 0) {
         const queueCell = q.shift();
-        console.log("queueCell", queueCell);
+        // console.log("queueCell", queueCell);
         if (!queueCell) continue; // TypeScript needs this
 
         const y = queueCell.y as number;
@@ -60,6 +60,7 @@ function findPaths(cellGrid: CellGrid) {
         // Separate out queue from matrix cells to avoid recursive refs and var pollution
         let matrixCell = matrix[y][x] as MatrixCell;
 
+        // Catch things that could result in endless loops
         if (index === undefined) {
             console.warn("Loop problem, cell didnt provide index")
             break;
@@ -67,19 +68,18 @@ function findPaths(cellGrid: CellGrid) {
 
         // Extend path with this cell, the previous iteration validated this move
         if (queueCell.path) {
-            console.log("Extend", index);
+            // console.log("Extend", index);
             queueCell.path.push(index);
         } else {
             // Generate new path with this cell
             const newPath = [index];
             const i = paths.push(newPath);
-            console.log("Generate new path", newPath);
+            // console.log("Generate new path", newPath);
             queueCell.path = paths[i - 1];
         }
 
         // We reached a block end
         if (matrixCell.type === CellType.Blocked) {
-            queueCell.path.push(index); // Mark the path blocked
             queueCell.path.push(PathSearchResult.Blocked); // Mark the path blocked
             continue; // Path is done
         }
@@ -87,14 +87,12 @@ function findPaths(cellGrid: CellGrid) {
         // A passed block is considered blocked for now too
         // TODO allow up to a certain amount of passes
         if (matrixCell.type === CellType.Passed) {
-            queueCell.path.push(index); // Mark the path blocked
             queueCell.path.push(PathSearchResult.Passed); // Mark the path blocked
             continue; // Path is done
         }
 
         // We reached the end
         if (matrixCell.type === CellType.End) {
-            queueCell.path.push(index); // Mark the path resolved
             queueCell.path.push(PathSearchResult.Reached); // Mark the path blocked
             continue; // Path is done
         }
@@ -117,7 +115,7 @@ function findPaths(cellGrid: CellGrid) {
 
         // Down
         if (matrix[y + 1] && y + 1 <= rows) {
-            console.log("Go down");
+            // console.log("Go down");
 
             let followPath = getFollowPath();
             q.push({ cellIndex: matrix[y + 1][x].cellIndex, y: y + 1, x: x, path: followPath } as QueueCell);
@@ -125,7 +123,7 @@ function findPaths(cellGrid: CellGrid) {
 
         // Up
         if (matrix[y - 1] && y - 1 >= 0) {
-            console.log("Go up");
+            // console.log("Go up");
 
             let followPath = getFollowPath();
             q.push({ cellIndex: matrix[y - 1][x].cellIndex, y: y - 1, x: x, path: followPath } as QueueCell);
@@ -133,7 +131,7 @@ function findPaths(cellGrid: CellGrid) {
 
         // Right
         if (matrix[y][x + 1] && x + 1 <= columns) {
-            console.log("Go right");
+            // console.log("Go right");
 
             let followPath = getFollowPath();
             q.push({ cellIndex: matrix[y][x + 1].cellIndex, y: y, x: x + 1, path: followPath } as QueueCell);
@@ -141,7 +139,7 @@ function findPaths(cellGrid: CellGrid) {
 
         // Left
         if (matrix[y][x - 1] && x - 1 >= 0) {
-            console.log("Go left");
+            // console.log("Go left");
 
             let followPath = getFollowPath();
             q.push({ cellIndex: matrix[y][x - 1].cellIndex, y: y, x: x - 1, path: followPath } as QueueCell);
@@ -152,8 +150,8 @@ function findPaths(cellGrid: CellGrid) {
             matrixCell.type = CellType.Passed;
         }
 
-        console.log("Paths", paths, '\n');
-        console.log("----------", '\n');
+        // console.log("Paths", paths, '\n');
+        // console.log("----------", '\n');
 
         loops += 1;
         if (loops > 1000) {
@@ -161,6 +159,6 @@ function findPaths(cellGrid: CellGrid) {
             break;
         }
     }
-    console.log("Final Paths", paths, '\n');
+    // console.log("Final Paths", paths, '\n');
     return paths;
 }

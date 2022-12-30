@@ -118,7 +118,7 @@ function App() {
 
     // Find all paths to the target
     const paths = getReachablePaths(cellGrid);
-    console.log("YES", paths);
+    console.log("Reachable", paths);
 
     // for (let i = 0; i < rows.length; i++) {
 
