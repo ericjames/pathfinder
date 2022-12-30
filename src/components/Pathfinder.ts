@@ -6,6 +6,7 @@ export function getReachablePaths(cellGrid: CellGrid) {
     if (paths && paths.length > 0) {
         // Now only pass back completed paths
         const reachablePaths = paths.filter((path) => path.indexOf(PathSearchResult.Reached) > -1);
+        reachablePaths.map((p) => p.pop());
         // @TODO loop through passed paths and see if we can make lemonade out of it
         return reachablePaths;
     }
@@ -38,7 +39,7 @@ function findPaths(cellGrid: CellGrid) {
     for (let i = 0; i < rows; ++i) {
         for (let j = 0; j < columns; ++j) {
             if (cellGrid[i][j].type === CellType.Start) {
-                q.push({ cellIndex: cellGrid[i][j].index, x: i, y: j } as QueueCell);
+                q.push({ cellIndex: cellGrid[i][j].index, x: j, y: i } as QueueCell);
                 break;
             }
         }
@@ -113,6 +114,14 @@ function findPaths(cellGrid: CellGrid) {
         // Now move in each direction only if it exists and wont exceed the boundary 
         // The next loop will evaluate what to do with the queue cell
 
+        // Right
+        if (matrix[y][x + 1] && x + 1 <= columns) {
+            // console.log("Go right");
+
+            let followPath = getFollowPath();
+            q.push({ cellIndex: matrix[y][x + 1].cellIndex, y: y, x: x + 1, path: followPath } as QueueCell);
+        }
+
         // Down
         if (matrix[y + 1] && y + 1 <= rows) {
             // console.log("Go down");
@@ -127,14 +136,6 @@ function findPaths(cellGrid: CellGrid) {
 
             let followPath = getFollowPath();
             q.push({ cellIndex: matrix[y - 1][x].cellIndex, y: y - 1, x: x, path: followPath } as QueueCell);
-        }
-
-        // Right
-        if (matrix[y][x + 1] && x + 1 <= columns) {
-            // console.log("Go right");
-
-            let followPath = getFollowPath();
-            q.push({ cellIndex: matrix[y][x + 1].cellIndex, y: y, x: x + 1, path: followPath } as QueueCell);
         }
 
         // Left
@@ -154,6 +155,7 @@ function findPaths(cellGrid: CellGrid) {
         // console.log("----------", '\n');
 
         loops += 1;
+        // Arbitrary loop limit, probably should set this to be the pascal number of the grid row/col
         if (loops > 1000) {
             console.warn("Too many loops\n\n");
             break;

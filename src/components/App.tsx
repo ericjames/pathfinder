@@ -1,7 +1,8 @@
-import { AppState, CellGrid, CellStatus, CellType, GridForm } from './types';
+import { AppState, CellGrid, CellIndex, CellStatus, CellType, GridForm, PathsThroughMatrix } from './types';
 import { useEffect, useState } from 'react';
 
-import Grid from './Grid';
+import InteractiveGrid from './InteractiveGrid';
+import Paths from './Paths';
 import { getReachablePaths } from './Pathfinder';
 import styled from 'styled-components';
 
@@ -13,6 +14,11 @@ min-height: 80vh;
 margin: auto;
 
 `;
+
+const GridArea = styled.div`
+position: relative;
+height: 800px;
+`
 
 const Header = styled.header`
 
@@ -34,55 +40,57 @@ function App() {
 
   // Cell Grid form of cells is only used for path traversal 
   const [cellGrid, setCellGrid] = useState<CellGrid>([]);
+  const [paths, setPaths] = useState<PathsThroughMatrix>([]);
 
-  // @TODO Path draw
-  const [paths, setPaths] = useState([]);
+  // useEffect(() => {
+  //   // @Debugging only
+  //   createCellGrid();
+  // }, [gridForm]);
 
-  useEffect(() => {
-    // @Debugging only
-    createCells();
-  }, [gridForm]);
-
-  const createCells = () => {
+  const createCellGrid = () => {
     // Reset app
     setAppState(AppState.Start);
+    setCells([]);
+    setCellGrid([]);
+    setPaths([]);
 
-    if (gridForm.rows && gridForm.columns) {
-      const cellCount = gridForm.rows * gridForm.columns;
-
-      // Create our main tracking array of cells
-      const newCells = [];
-      for (let i = 0; i < cellCount; i++) {
-        newCells.push({ index: i, type: CellType.Open } as CellStatus);
-      }
-
-      // Give coordinates and boundaries for each cell
-      // Avoiding needing to do these loops later, use CSS to do the visual trickery
-      let counter = 0;
-      const rows = [];
-      for (let y = 0; y < gridForm.rows; y++) {
-        rows.push([] as Array<CellStatus>);
-        const row = rows[y];
-        for (let x = 0; x < gridForm.columns; x++) {
-          newCells[counter].y = y;
-          newCells[counter].x = x;
-          newCells[counter].boundaryLeft = (x === 0);
-          newCells[counter].boundaryRight = (x === gridForm.columns - 1);
-          newCells[counter].boundaryTop = (y === 0);
-          newCells[counter].boundaryBottom = (y === gridForm.rows - 1);
-          row.push(newCells[counter]);
-          counter = counter + 1;
-        }
-      }
-
-      setCells(newCells);
-      setCellGrid(rows);
-    } else {
-      alert("Please provide positive numbers for rows and columns");
+    if (!gridForm.rows || !gridForm.columns) {
+      return alert("Please provide positive numbers for rows and columns");
     }
+
+    const cellCount = gridForm.rows * gridForm.columns;
+
+    // Create our main tracking array of cells
+    const newCells = [];
+    for (let i = 0; i < cellCount; i++) {
+      newCells.push({ index: i, type: CellType.Open } as CellStatus);
+    }
+
+    // Give coordinates and boundaries for each cell
+    // Avoiding needing to do these loops later, use CSS to do the visual trickery
+    let counter = 0;
+    const rows = [];
+    for (let y = 0; y < gridForm.rows; y++) {
+      rows.push([] as Array<CellStatus>);
+      const row = rows[y];
+      for (let x = 0; x < gridForm.columns; x++) {
+        newCells[counter].y = y;
+        newCells[counter].x = x;
+        newCells[counter].boundaryLeft = (x === 0);
+        newCells[counter].boundaryRight = (x === gridForm.columns - 1);
+        newCells[counter].boundaryTop = (y === 0);
+        newCells[counter].boundaryBottom = (y === gridForm.rows - 1);
+        row.push(newCells[counter]);
+        counter = counter + 1;
+      }
+    }
+
+    setCells(newCells);
+    setCellGrid(rows);
+
   }
 
-  const onCellClick = (cell: CellStatus) => {
+  const selectCellAndChangeAppState = (cell: CellStatus) => {
 
     if (appState === AppState.Start) {
       setCellStart(cell);
@@ -105,7 +113,6 @@ function App() {
     const newCells = [...cells];
     newCells[cell.index].type = CellType.End;
     setCells(newCells);
-    setPath();
   }
 
   const setCellBlocked = (cell: CellStatus) => {
@@ -114,21 +121,26 @@ function App() {
     setCells(newCells);
   }
 
-  const setPath = () => {
+  const determinePaths = () => {
+
+    if (appState === AppState.Start) {
+      return alert("Pick a starting cell");
+    }
+    if (appState === AppState.End) {
+      return alert("Pick a ending cell");
+    }
 
     // Find all paths to the target
     const paths = getReachablePaths(cellGrid);
+    console.log("Cells are", cells);
     console.log("Reachable", paths);
 
-    // for (let i = 0; i < rows.length; i++) {
-
-    // }
-
-
+    if (paths && paths.length > 0) {
+      setPaths(paths);
+    } else {
+      alert("No paths found :(");
+    }
   }
-
-
-
 
   return (
     <AppWrapper>
@@ -139,9 +151,14 @@ function App() {
 
         <input value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
         <input value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
-        <button onClick={createCells}>Set Grid</button>
+        <button onClick={createCellGrid}>Set Grid</button>
 
-        <Grid gridForm={gridForm} cells={cells} onCellClick={onCellClick} />
+        {cells.length > 0 && <button style={{float: 'right'}}onClick={determinePaths}>Find Path</button>}
+
+        <GridArea>
+          <InteractiveGrid gridForm={gridForm} cells={cells} selectCellAndChangeAppState={selectCellAndChangeAppState} />
+          <Paths gridForm={gridForm} cells={cells} cellGrid={cellGrid} paths={paths} />
+        </GridArea>
 
         <br /><br /><br /><br />
         Debug:<br /><br />
