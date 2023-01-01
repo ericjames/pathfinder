@@ -23,9 +23,10 @@ z-index: 1;
 `;
 
 const PathCell = styled.div`
-font-size: 2em;
+font-size: 1em;
 font-weight: bold;
 display: flex;
+flex-wrap: wrap;
 align-items: center;
 height: 100%;
 `;
@@ -48,7 +49,7 @@ export default function Paths({ gridForm, cellGrid, paths, cells }: PathsProps) 
                             <GenericCell key={c} gridForm={gridForm} cell={cell}>
                                 <PathCell style={{
                                     color: colors[p],
-                                    marginLeft: p * 30
+                                    marginLeft: p * 19
                                 }}>
                                     {path.indexOf(cell.index) !== -1 ? path.indexOf(cell.index) : ''}
                                 </PathCell>

@@ -13,15 +13,17 @@ type CellProps = {
 const CellWrapper = styled.div`
 flex: 0 0 auto;
 height: auto;
+overflow: hidden;
 flex-wrap: wrap;
 border: 1px solid #ccc;
 box-sizing: border-box;
+position: relative;
 `;
 
 export default function GenericCell({ cell, gridForm, onCellClick, children }: CellProps) {
     // console.log("CELL", cell);
 
-    const style = {
+    const cellStyle = {
         flexBasis: (100 / gridForm.rows) + '%',
         height: (100 / gridForm.columns) + '%',
     };
@@ -33,7 +35,7 @@ export default function GenericCell({ cell, gridForm, onCellClick, children }: C
     }
 
     return (
-        <CellWrapper onClick={onGenericCellClick} style={style}>
+        <CellWrapper onClick={onGenericCellClick} style={cellStyle}>
             {children}
         </CellWrapper>
     )

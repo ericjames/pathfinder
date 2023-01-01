@@ -1,8 +1,3 @@
-enum GridShape {
-  Rows = 0,
-  Columns = 0
-}
-
 export enum AppState {
   Start = "Start",
   End = "End",
@@ -20,8 +15,8 @@ export enum CellType {
 export type OnCellClick = (cell: CellStatus) => void;
 
 export interface GridForm {
-  rows: GridShape.Rows,
-  columns: GridShape.Columns,
+  rows: number,
+  columns: number,
 }
 // export interface GridCells {
 //   cells: Array<CellStatus>;

@@ -16,4 +16,11 @@ code {
 input, button {
   padding: 0.5em;
   font: inherit;
+  border-radius: 0.5em;
+  border: 1px solid #aaa;
+  margin-right: 0.5em;
+}
+
+button {
+  cursor: pointer;
 }

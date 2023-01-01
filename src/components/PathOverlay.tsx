@@ -22,7 +22,6 @@ export default function PathOverlay({ gridForm, path, cellGrid }: PathsProps) {
     return (
         <CellWrapper>
 
-
         </CellWrapper>
     )
 }

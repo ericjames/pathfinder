@@ -27,12 +27,17 @@ const Header = styled.header`
 const Content = styled.main`
 `;
 
+const Controls = styled.div`
+  margin-bottom: 1em;
+`;
+
+
 function App() {
 
   const [appState, setAppState] = useState<AppState>(AppState.Start);
 
   // User can change grid width height
-  const [gridForm, setGridForm] = useState<GridForm>({ rows: 3, columns: 3 });
+  const [gridForm, setGridForm] = useState<GridForm>({ rows: 0, columns: 0 });
 
   // Holy grail tracks number of cells and their X or O status
   // Single source of data used to render the grid via CSS
@@ -149,11 +154,13 @@ function App() {
       </Header>
       <Content>
 
-        <input value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
-        <input value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
-        <button onClick={createCellGrid}>Set Grid</button>
+        <Controls>
+          Width: <input min="1" max="100" value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
+          Height: <input min="1" max="100" value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
+          <button onClick={createCellGrid}>Set Grid</button>
 
-        {cells.length > 0 && <button style={{float: 'right'}}onClick={determinePaths}>Find Path</button>}
+          {cells.length > 0 && <button style={{ float: 'right' }} onClick={determinePaths}>Find Path</button>}
+        </Controls>
 
         <GridArea>
           <InteractiveGrid gridForm={gridForm} cells={cells} selectCellAndChangeAppState={selectCellAndChangeAppState} />
