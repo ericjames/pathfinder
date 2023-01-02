@@ -6,7 +6,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 type GridProps = {
-    gridForm: GridForm;
+    gridForm: GridForm | null;
     cells: Array<CellStatus> | [];
     selectCellAndChangeAppState: OnCellClick;
 };

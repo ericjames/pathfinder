@@ -1,7 +1,8 @@
 export enum AppState {
+  Setup = "Setup",
   Start = "Start",
   End = "End",
-  Open = "Open" // blocking time
+  Open = "Open" // blocking and pathing time
 }
 
 export enum CellType {
@@ -18,9 +19,6 @@ export interface GridForm {
   rows: number,
   columns: number,
 }
-// export interface GridCells {
-//   cells: Array<CellStatus>;
-// }
 
 export type CellIndex = number;
 export interface CellStatus {

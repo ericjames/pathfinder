@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 type PathsProps = {
     paths: PathsThroughMatrix;
-    gridForm: GridForm;
+    gridForm: GridForm | null;
     cellGrid: CellGrid;
     cells: Array<CellStatus>;
 };

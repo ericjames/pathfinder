@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 type CellProps = {
     cell: CellStatus;
-    gridForm: GridForm;
+    gridForm: GridForm | null;
     children?: JSX.Element[] | JSX.Element;
     onCellClick?: OnCellClick;
 };
@@ -23,10 +23,13 @@ position: relative;
 export default function GenericCell({ cell, gridForm, onCellClick, children }: CellProps) {
     // console.log("CELL", cell);
 
-    const cellStyle = {
-        flexBasis: (100 / gridForm.columns) + '%',
-        height: (100 / gridForm.rows) + '%',
-    };
+    let cellStyle = {};
+    if (gridForm) {
+        cellStyle = {
+            flexBasis: (100 / gridForm.columns) + '%',
+            height: (100 / gridForm.rows) + '%',
+        };
+    }
 
     const onGenericCellClick = () => {
         if (onCellClick) {
