@@ -10,14 +10,13 @@ const AppWrapper = styled.div`
 max-width: 1400px;
 padding: 20px;
 background: #fff;
-min-height: 80vh;
 margin: auto;
 
 `;
 
 const GridArea = styled.div`
 position: relative;
-height: 800px;
+height: 500px;
 `
 
 const Header = styled.header`
@@ -73,22 +72,24 @@ function App() {
 
     // Give coordinates and boundaries for each cell
     // Avoiding needing to do these loops later, use CSS to do the visual trickery
-    let counter = 0;
+    let cellIndex = 0;
     const rows = [];
     for (let y = 0; y < gridForm.rows; y++) {
       rows.push([] as Array<CellStatus>);
       const row = rows[y];
       for (let x = 0; x < gridForm.columns; x++) {
-        newCells[counter].y = y;
-        newCells[counter].x = x;
-        newCells[counter].boundaryLeft = (x === 0);
-        newCells[counter].boundaryRight = (x === gridForm.columns - 1);
-        newCells[counter].boundaryTop = (y === 0);
-        newCells[counter].boundaryBottom = (y === gridForm.rows - 1);
-        row.push(newCells[counter]);
-        counter = counter + 1;
+        newCells[cellIndex].y = y;
+        newCells[cellIndex].x = x;
+        newCells[cellIndex].boundaryLeft = (x === 0);
+        newCells[cellIndex].boundaryRight = (x === gridForm.columns - 1);
+        newCells[cellIndex].boundaryTop = (y === 0);
+        newCells[cellIndex].boundaryBottom = (y === gridForm.rows - 1);
+        row.push(newCells[cellIndex]);
+        cellIndex = cellIndex + 1;
       }
     }
+
+    console.log("what is grid", rows, gridForm);
 
     setCells(newCells);
     setCellGrid(rows);
@@ -155,8 +156,8 @@ function App() {
       <Content>
 
         <Controls>
-          Width: <input min="1" max="100" value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
-          Height: <input min="1" max="100" value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
+          Width: <input min="1" max="100" value={gridForm.columns} onChange={(e) => { setGridForm({ ...gridForm, columns: parseFloat(e.target.value) }) }} type="number" />
+          Height: <input min="1" max="100" value={gridForm.rows} onChange={(e) => { setGridForm({ ...gridForm, rows: parseFloat(e.target.value) }) }} type="number" />
           <button onClick={createCellGrid}>Set Grid</button>
 
           {cells.length > 0 && <button style={{ float: 'right' }} onClick={determinePaths}>Find Path</button>}
@@ -166,11 +167,6 @@ function App() {
           <InteractiveGrid gridForm={gridForm} cells={cells} selectCellAndChangeAppState={selectCellAndChangeAppState} />
           <Paths gridForm={gridForm} cells={cells} cellGrid={cellGrid} paths={paths} />
         </GridArea>
-
-        <br /><br /><br /><br />
-        Debug:<br /><br />
-        gridForm: {JSON.stringify(gridForm)}
-
 
       </Content>
     </AppWrapper>

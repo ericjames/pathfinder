@@ -24,8 +24,8 @@ export default function GenericCell({ cell, gridForm, onCellClick, children }: C
     // console.log("CELL", cell);
 
     const cellStyle = {
-        flexBasis: (100 / gridForm.rows) + '%',
-        height: (100 / gridForm.columns) + '%',
+        flexBasis: (100 / gridForm.columns) + '%',
+        height: (100 / gridForm.rows) + '%',
     };
 
     const onGenericCellClick = () => {

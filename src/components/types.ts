@@ -38,8 +38,20 @@ export type CellGrid = Array<Array<CellStatus>>;
 
 // Pathfinder Types
 
-export type PathOfCellIndexes = Array<CellIndex | PathSearchResult>;
-export type PathsThroughMatrix = Array<PathOfCellIndexes>;
+export enum Direction {
+  Up = "Up",
+  Down = "Down",
+  Left = "Left",
+  Right = "Right"
+}
+export interface PathCell {
+  cellIndex: CellIndex, // location in main array
+  result: PathSearchResult, // help determine if we've reached the end of a path
+  prevDirection: Direction, // help UI draw arrows
+  nextDirection: Direction,// help UI draw arrows
+}
+export type Path = Array<PathCell>;
+export type PathsThroughMatrix = Array<Path>;
 export type MatrixGrid = Array<Array<MatrixCell>>;
 
 export interface MatrixCell {
@@ -50,7 +62,9 @@ export interface MatrixCell {
 export interface QueueCell extends MatrixCell {
   y: number,
   x: number,
-  path: PathOfCellIndexes
+  path: Path,
+  prevDirection: Direction // Gets passed into PathCell later
+  nextDirection: Direction // Gets passed into PathCell later
 }
 
 export enum PathSearchResult {

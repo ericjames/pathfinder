@@ -1,9 +1,9 @@
-import { CellGrid, CellStatus, CellType, GridForm, OnCellClick, PathOfCellIndexes, PathsThroughMatrix } from './types';
+import { CellGrid, CellStatus, CellType, GridForm, OnCellClick, Path, PathsThroughMatrix } from './types';
 
 import styled from 'styled-components';
 
 type PathsProps = {
-    path: PathOfCellIndexes;
+    path: Path;
     gridForm: GridForm;
     cellGrid: CellGrid;
 };

@@ -1,5 +1,6 @@
 import { CellGrid, CellStatus, CellType, GridForm, OnCellClick, PathsThroughMatrix } from './types';
 
+import Arrow from './Arrow';
 import GenericCell from './GenericCell';
 import GenericGrid from './GenericGrid';
 import PathOverlay from './PathOverlay';
@@ -42,19 +43,28 @@ export default function Paths({ gridForm, cellGrid, paths, cells }: PathsProps) 
     return <>
         {paths && paths.map((path, p) => {
             console.log("PATH", path);
+
+            const pathIndexes = path.map((cell) => cell.cellIndex);
+
             return (
                 <PathsWrapper>
                     <GenericGrid key={p}>
-                        {cells && cells.map((cell, c) =>
-                            <GenericCell key={c} gridForm={gridForm} cell={cell}>
-                                <PathCell style={{
-                                    color: colors[p],
-                                    marginLeft: p * 19
-                                }}>
-                                    {path.indexOf(cell.index) !== -1 ? path.indexOf(cell.index) : ''}
-                                </PathCell>
-                            </GenericCell>
-                        )}
+                        {cells && cells.map((cell, c) => {
+
+                            const pathIndex = pathIndexes.indexOf(cell.index);
+                            const pathCell = pathIndexes.indexOf(cell.index) ? path[pathIndex] : null;
+                            return (
+                                <GenericCell key={c} gridForm={gridForm} cell={cell}>
+                                    <PathCell style={{
+                                        color: colors[p],
+                                        marginLeft: p * 19
+                                    }}>
+                                        {/* {pathCell ? pathIndex : ''} */}
+                                        <Arrow prevDirection={pathCell?.prevDirection} nextDirection={path[pathIndex + 1]?.prevDirection} />
+                                    </PathCell>
+                                </GenericCell>
+                            )
+                        })}
                     </GenericGrid>
                 </PathsWrapper>
             )

@@ -1,11 +1,21 @@
-import { CellGrid, CellIndex, CellStatus, CellType, MatrixCell, MatrixGrid, PathSearchResult, PathsThroughMatrix, QueueCell } from "./types";
+import { CellGrid, CellIndex, CellStatus, CellType, Direction, MatrixCell, MatrixGrid, Path, PathCell, PathSearchResult, PathsThroughMatrix, QueueCell } from "./types";
+
+import { WatchDirectoryKind } from "typescript";
 
 export function getReachablePaths(cellGrid: CellGrid) {
     // console.log(cellGrid);
     const paths = findPaths(cellGrid);
     if (paths && paths.length > 0) {
         // Now only pass back completed paths
-        const reachablePaths = paths.filter((path) => path.indexOf(PathSearchResult.Reached) > -1);
+        const reachablePaths = paths.filter((path) => {
+            let acceptPath = false;
+            path.forEach((cell) => {
+                if (cell.result === PathSearchResult.Reached) {
+                    acceptPath = true;
+                }
+            })
+            return acceptPath;
+        });
         reachablePaths.map((p) => p.pop());
         // @TODO loop through passed paths and see if we can make lemonade out of it
         return reachablePaths;
@@ -57,6 +67,8 @@ function findPaths(cellGrid: CellGrid) {
         const y = queueCell.y as number;
         const x = queueCell.x as number;
         const index = queueCell.cellIndex as CellIndex;
+        const prevDirection = queueCell.prevDirection as Direction;
+        const nextDirection = queueCell.nextDirection as Direction;
 
         // Separate out queue from matrix cells to avoid recursive refs and var pollution
         let matrixCell = matrix[y][x] as MatrixCell;
@@ -70,10 +82,10 @@ function findPaths(cellGrid: CellGrid) {
         // Extend path with this cell, the previous iteration validated this move
         if (queueCell.path) {
             // console.log("Extend", index);
-            queueCell.path.push(index);
+            queueCell.path.push({ cellIndex: index, prevDirection, nextDirection } as PathCell);
         } else {
             // Generate new path with this cell
-            const newPath = [index];
+            const newPath = [{ cellIndex: index, prevDirection, nextDirection } as PathCell] as Path;
             const i = paths.push(newPath);
             // console.log("Generate new path", newPath);
             queueCell.path = paths[i - 1];
@@ -81,20 +93,20 @@ function findPaths(cellGrid: CellGrid) {
 
         // We reached a block end
         if (matrixCell.type === CellType.Blocked) {
-            queueCell.path.push(PathSearchResult.Blocked); // Mark the path blocked
+            queueCell.path.push({ result: PathSearchResult.Blocked } as PathCell); // Mark the path blocked
             continue; // Path is done
         }
 
         // A passed block is considered blocked for now too
         // TODO allow up to a certain amount of passes
         if (matrixCell.type === CellType.Passed) {
-            queueCell.path.push(PathSearchResult.Passed); // Mark the path blocked
+            queueCell.path.push({ result: PathSearchResult.Passed } as PathCell); // Mark the path blocked
             continue; // Path is done
         }
 
         // We reached the end
         if (matrixCell.type === CellType.End) {
-            queueCell.path.push(PathSearchResult.Reached); // Mark the path blocked
+            queueCell.path.push({ result: PathSearchResult.Reached } as PathCell); // Mark the path blocked
             continue; // Path is done
         }
 
@@ -111,7 +123,7 @@ function findPaths(cellGrid: CellGrid) {
             }
         }
 
-        // Now move in each direction only if it exists and wont exceed the boundary 
+        // Now move in each direction only if it exists and wont exceed the boundary (row, col length)
         // The next loop will evaluate what to do with the queue cell
 
         // Right
@@ -119,7 +131,12 @@ function findPaths(cellGrid: CellGrid) {
             // console.log("Go right");
 
             let followPath = getFollowPath();
-            q.push({ cellIndex: matrix[y][x + 1].cellIndex, y: y, x: x + 1, path: followPath } as QueueCell);
+            q.push({
+                cellIndex: matrix[y][x + 1].cellIndex, y: y, x: x + 1, path: followPath,
+                prevDirection: Direction.Right,
+            } as QueueCell);
+
+            // followPath[followPath.length - 1].nextDirection = Direction.Right || null;
         }
 
         // Down
@@ -127,7 +144,10 @@ function findPaths(cellGrid: CellGrid) {
             // console.log("Go down");
 
             let followPath = getFollowPath();
-            q.push({ cellIndex: matrix[y + 1][x].cellIndex, y: y + 1, x: x, path: followPath } as QueueCell);
+            q.push({
+                cellIndex: matrix[y + 1][x].cellIndex, y: y + 1, x: x, path: followPath,
+                prevDirection: Direction.Down,
+            } as QueueCell);
         }
 
         // Up
@@ -135,7 +155,12 @@ function findPaths(cellGrid: CellGrid) {
             // console.log("Go up");
 
             let followPath = getFollowPath();
-            q.push({ cellIndex: matrix[y - 1][x].cellIndex, y: y - 1, x: x, path: followPath } as QueueCell);
+            q.push({
+                cellIndex: matrix[y - 1][x].cellIndex, y: y - 1, x: x, path: followPath,
+                prevDirection: Direction.Up,
+            } as QueueCell);
+
+            // followPath[followPath.length - 1].nextDirection = Direction.Up || null;
         }
 
         // Left
@@ -143,7 +168,12 @@ function findPaths(cellGrid: CellGrid) {
             // console.log("Go left");
 
             let followPath = getFollowPath();
-            q.push({ cellIndex: matrix[y][x - 1].cellIndex, y: y, x: x - 1, path: followPath } as QueueCell);
+            q.push({
+                cellIndex: matrix[y][x - 1].cellIndex, y: y, x: x - 1, path: followPath,
+                prevDirection: Direction.Left,
+            } as QueueCell);
+
+            // followPath[followPath.length - 1].nextDirection = Direction.Left || null;
         }
 
         // Block this cell as traversed
@@ -161,6 +191,14 @@ function findPaths(cellGrid: CellGrid) {
             break;
         }
     }
-    // console.log("Final Paths", paths, '\n');
+
+    // paths.forEach((pathCells) => {
+    //     pathCells.forEach((cell, i) => {
+    //         if (pathCells[i + 1]) {
+    //             console.log("NEXT", pathCells[i + 1]);
+    //             cell.nextDirection = pathCells[i + 1].prevDirection;
+    //         }
+    //     });
+    // });
     return paths;
 }
