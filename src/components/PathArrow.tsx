@@ -97,7 +97,7 @@ const ArrowWrapper = styled.div<ArrowWrapperProps>`
 export default function PathArrow({ color, pathNumber, prevDirection, nextDirection }: ArrowProps) {
     if (prevDirection || nextDirection) {
         return (
-            <ArrowWrapper prev={prevDirection} next={nextDirection} style={{ borderWidth: -(pathNumber * 3) + 15, borderColor: color }}>
+            <ArrowWrapper prev={prevDirection} next={nextDirection} style={{ borderWidth: -(pathNumber * 5) + 20, borderColor: color }}>
                 {/* Prev: {prevDirection}<br />
                 Next: {nextDirection} */}
             </ArrowWrapper>

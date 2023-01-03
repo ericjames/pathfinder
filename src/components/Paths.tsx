@@ -1,4 +1,4 @@
-import { CellGrid, CellStatus, CellType, GridForm, OnCellClick, PathsThroughMatrix } from './types';
+import { CellGrid, CellStatus, CellType, GridForm, OnCellClick, PathsThroughMatrix, colors } from './types';
 
 import GenericCell from './GenericCell';
 import GenericGrid from './GenericGrid';
@@ -33,7 +33,6 @@ height: 100%;
 
 export default function Paths({ gridForm, cellGrid, paths, cells }: PathsProps) {
 
-    const colors = ['#003f5c', '#58508d', '#bc5090', '#ff6361', '#ffa600'];
 
     if (paths) {
         let displayedPaths = paths;
@@ -46,7 +45,7 @@ export default function Paths({ gridForm, cellGrid, paths, cells }: PathsProps) 
         // Limit solutions
         let limitedPaths = displayedPaths.slice(0, 5);
 
-        console.log(limitedPaths);
+        // console.log(limitedPaths);
 
         // Theres just one solution and its direct
         if (limitedPaths[0] && limitedPaths[0].length <= 3) {

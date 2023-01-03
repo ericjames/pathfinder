@@ -1,4 +1,4 @@
-import { AppState, CellGrid, CellIndex, CellStatus, CellType, GridForm, PathsThroughMatrix } from './types';
+import { AppState, CellGrid, CellIndex, CellStatus, CellType, GridForm, PathsThroughMatrix, colors } from './types';
 import { useEffect, useState } from 'react';
 
 import InteractiveGrid from './InteractiveGrid';
@@ -31,9 +31,14 @@ const Content = styled.main`
 const Notice = styled.div`
 text-align: center;
 width: 100%;
-text-align: center;
 color: #555;
 margin: 1em;
+div {
+  display: inline-block;
+  border-radius: 1em;
+  color: #fff;
+  margin-left: 0.5em;
+}
 `;
 
 const Controls = styled.div`
@@ -199,8 +204,8 @@ function App() {
             <button onClick={createCellGrid}>Create Grid</button>
           </div>
           {gridForm && appState === AppState.Open ? <button onClick={resetApp}>Start over</button> : null}
-          {gridForm && appState === AppState.Open && paths.length === 0 ? <button style={{ marginLeft: 50, minWidth: 300, backgroundColor: appState === AppState.Open ? 'lightblue' : '' }} onClick={determinePaths}>Find Path</button> : null}
-          {gridForm && appState === AppState.Open && paths.length > 0 ? <button style={{ marginLeft: 50, minWidth: 300, backgroundColor: appState === AppState.Open ? 'lightyellow' : '' }} onClick={resetPaths}>Reset Paths</button> : null}
+          {gridForm && appState === AppState.Open && paths.length === 0 ? <button style={{ marginLeft: 50, minWidth: 300, backgroundColor: appState === AppState.Open ? '#ffa600' : '' }} onClick={determinePaths}>Find Path</button> : null}
+          {gridForm && appState === AppState.Open && paths.length > 0 ? <button style={{ marginLeft: 50, minWidth: 300, backgroundColor: appState === AppState.Open ? '#fff' : '' }} onClick={resetPaths}>Reset Paths</button> : null}
         </Controls>
 
         <>
@@ -208,7 +213,10 @@ function App() {
           {appState === AppState.Start ? <Notice>Select a starting block...</Notice> : null}
           {appState === AppState.End ? <Notice>Select an ending block...</Notice> : null}
           {appState === AppState.Open && !paths.length ? <Notice>You may "block" any block and Find a Path</Notice> : null}
-          {appState === AppState.Open && paths.length > 0 ? <Notice>Paths found!</Notice> : null}
+          {appState === AppState.Open && paths.length > 0 ? <Notice>
+            Paths found!
+            {paths.map((path, p) => <div style={{ background: colors[p], width: 100, }}>Path {p + 1} <br />{path.length} steps</div>)}
+          </Notice> : null}
         </>
 
         <GridArea>

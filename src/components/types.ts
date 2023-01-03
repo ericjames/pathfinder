@@ -1,3 +1,5 @@
+export const colors = ['#ffa600', '#ff6361', '#bc5090', '#003f5c', '#58508d'];
+
 export enum AppState {
   Setup = "Setup",
   Start = "Start",
