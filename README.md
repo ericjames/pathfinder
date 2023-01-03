@@ -1,3 +1,7 @@
+# Pathfinder
+
+TypeScript + React app to find a path through a grid.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
