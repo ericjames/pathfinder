@@ -191,14 +191,5 @@ function findPaths(cellGrid: CellGrid) {
             break;
         }
     }
-
-    // paths.forEach((pathCells) => {
-    //     pathCells.forEach((cell, i) => {
-    //         if (pathCells[i + 1]) {
-    //             console.log("NEXT", pathCells[i + 1]);
-    //             cell.nextDirection = pathCells[i + 1].prevDirection;
-    //         }
-    //     });
-    // });
     return paths;
 }

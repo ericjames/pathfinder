@@ -8,6 +8,7 @@ type CellProps = {
     gridForm: GridForm | null;
     children?: JSX.Element[] | JSX.Element;
     onCellClick?: OnCellClick;
+    style?: {};
 };
 
 const CellWrapper = styled.div`
@@ -20,7 +21,7 @@ box-sizing: border-box;
 position: relative;
 `;
 
-export default function GenericCell({ cell, gridForm, onCellClick, children }: CellProps) {
+export default function GenericCell({ cell, style, gridForm, onCellClick, children }: CellProps) {
     // console.log("CELL", cell);
 
     let cellStyle = {};
@@ -38,7 +39,7 @@ export default function GenericCell({ cell, gridForm, onCellClick, children }: C
     }
 
     return (
-        <CellWrapper onClick={onGenericCellClick} style={cellStyle}>
+        <CellWrapper onClick={onGenericCellClick} style={{ ...cellStyle, ...style }}>
             {children}
         </CellWrapper>
     )
