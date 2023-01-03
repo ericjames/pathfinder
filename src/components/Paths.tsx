@@ -70,7 +70,7 @@ export default function Paths({ gridForm, cellGrid, paths, cells }: PathsProps) 
                                     <GenericCell key={c} gridForm={gridForm} cell={cell} style={{ border: 0 }}>
                                         <PathCell style={{
                                             color: colors[p],
-                                            zIndex: p + 1 // Let alternate paths show up
+                                            zIndex: 10 - p
                                         }}>
                                             {/* {pathCell ? pathIndex : ''} */}
                                             <PathArrow color={colors[p]} pathNumber={p + 1} prevDirection={pathCell?.prevDirection} nextDirection={path[pathIndex + 1]?.prevDirection} />

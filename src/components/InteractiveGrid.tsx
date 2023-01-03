@@ -37,17 +37,19 @@ cursor: pointer;
 `;
 
 const Indicator = styled.div<UICellProps>`
-width: 80%;
-height: 80%;
+width: 90%;
+height: 90%;
 margin: 5% auto;
+box-shadow: 0 0em 1em #eee;
 box-sizing: border-box;
-border-radius: 2em;
+border-radius: 1em;
 display: flex;
 align-items: center;
 justify-content: center;
 text-align: center;
 font-weight: bold;
-font-size: 1.2em;
+font-size: 1vw;
+color: #fff;
 background: ${props => {
         switch (props.type) {
             case CellType.Start:

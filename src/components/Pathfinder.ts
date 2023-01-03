@@ -16,7 +16,7 @@ export function getReachablePaths(cellGrid: CellGrid) {
             })
             return acceptPath;
         });
-        reachablePaths.map((p) => p.pop());
+        reachablePaths.map((p) => p.pop()); // Clean up the reached appendage
         // @TODO loop through passed paths and see if we can make lemonade out of it
         return reachablePaths;
     }
@@ -186,6 +186,7 @@ function findPaths(cellGrid: CellGrid) {
 
         loops += 1;
         // Arbitrary loop limit, probably should set this to be the pascal number of the grid row/col
+        // Bigger grids have less complex routes 
         if (loops > 1000) {
             console.warn("Too many loops\n\n");
             break;
